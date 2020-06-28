@@ -48,7 +48,7 @@ class Net(nn.Module):
         ## x is the input image and, as an example, here you may choose to include a pool/conv step:
         ## x = self.pool(F.relu(self.conv1(x)))
         
-        x = 1.2*layer1(x)
+        x = 1.2*self.layer1(x)
 	
         # a modified x, having gone through all the layers of your model, should be returned
         return x
