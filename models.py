@@ -7,7 +7,10 @@ import torch.nn.functional as F
 import torch.nn.init as I
 
 def conv(ni, nf):
-	return nn.Conv2d(ni nf, kernel_size = 3, stride = 2, padding = 1)
+	return nn.Conv2d(ni, nf, kernel_size = 3, stride = 2, padding = 1)
+
+def conv_layer(ni, nf):
+	return nn.Sequential(conv(ni,nf), nn.BatchNorm2d(nf), nn.ReLU())
 
 
 class Net(nn.Module):
@@ -23,23 +26,21 @@ class Net(nn.Module):
         # As an example, you've been given a convolutional layer, which you may (but don't have to) change:
         # 1 input image channel (grayscale), 32 output channels/feature maps, 5x5 square convolution kernel
         self.layer1 = nn.Sequential(conv_layer(3,8),# 128
-        							# conv_layer(4,8),# 128
-        							conv_layer(8,16),# 64
-        							nn.MaxPool2d(2,2),#32
-        							conv_layer(16,32), #16
-        							# nn.MaxPool2d(2,2)#16
-        							conv_layer(32,64), #8
-        							nn.MaxPool2d(2,2),#4
-        							conv_layer(64,128),#2
-        							conv_layer(128,136))#1
+				# conv_layer(4,8),# 128
+				conv_layer(8,16),# 64
+				nn.MaxPool2d(2,2),#32
+				conv_layer(16,32), #16
+				# nn.MaxPool2d(2,2)#16
+				conv_layer(32,64), #8
+				nn.MaxPool2d(2,2),#4
+				conv_layer(64,128),#2
+				conv_layer(128,136),
+				nn.Tanh())#1
 
         
         ## Note that among the layers to add, consider including:
         # maxpooling layers, multiple conv layers, fully-connected layers, and other layers (such as dropout or batch normalization) to avoid overfitting
         
-
-    def conv_layer(ni, nf):
-    	return nn.Sequential(conv(ni,nf), nn.BatchNorm2d(nf), nn.ReLU())
 
 
     def forward(self, x):
@@ -47,6 +48,7 @@ class Net(nn.Module):
         ## x is the input image and, as an example, here you may choose to include a pool/conv step:
         ## x = self.pool(F.relu(self.conv1(x)))
         
-        x = layer1(x)
+        x = 1.2*layer1(x)
+	
         # a modified x, having gone through all the layers of your model, should be returned
         return x
