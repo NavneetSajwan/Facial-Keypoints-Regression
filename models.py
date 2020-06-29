@@ -12,6 +12,8 @@ def conv(ni, nf):
 def conv_layer(ni, nf):
 	return nn.Sequential(conv(ni,nf), nn.BatchNorm2d(nf), nn.ReLU())
 
+def convres(ni, nf):
+	
 
 class Net(nn.Module):
 
@@ -37,7 +39,17 @@ class Net(nn.Module):
 				conv_layer(128,136),
 				nn.Tanh())#1
 
-        
+        self.layer2 = nn.Sequential(conv_layer(3,8),# 128
+				# conv_layer(4,8),# 128
+				conv_layer(8,16),# 64
+				nn.MaxPool2d(2,2),#32
+				conv_layer(16,32), #16
+				# nn.MaxPool2d(2,2)#16
+				conv_layer(32,64), #8
+				nn.MaxPool2d(2,2)
+				nn.ReLU())#4
+	
+	self.layer3 = nn.Sequential(nn.Linear(1024, 136), 1.2* nn.Tanh())
         ## Note that among the layers to add, consider including:
         # maxpooling layers, multiple conv layers, fully-connected layers, and other layers (such as dropout or batch normalization) to avoid overfitting
         
@@ -48,7 +60,9 @@ class Net(nn.Module):
         ## x is the input image and, as an example, here you may choose to include a pool/conv step:
         ## x = self.pool(F.relu(self.conv1(x)))
         
-        x = 1.2*self.layer1(x)
+#         x = 1.2*self.layer1(x)
+	x = self.layer2(x)
+	x = self.layer3(x.view(-1, 1024))
 	
         # a modified x, having gone through all the layers of your model, should be returned
         return x
