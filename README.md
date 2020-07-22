@@ -1,2 +1,5 @@
 # Facial-Keypoints-Regression
-Predict the keypoints on human face
+
+Proper readme is under construction!
+
+Resnet implementation code is in models.py
